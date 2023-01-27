@@ -83,7 +83,7 @@ app.get("/show-object/:id", async (req, res) => {
     if (object.length > 0) {
       res.status(200).json({
         success: true,
-        message: "barang berhasil ditemukan",
+        message: "object berhasil ditemukan",
         data: object,
       });
     } else {
@@ -91,6 +91,31 @@ app.get("/show-object/:id", async (req, res) => {
         success: false,
         message: "Object tidak ditemukan",
         data: {},
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
+// API get request untuk menampilkan list object
+app.get("/show-object-list", async (req, res) => {
+  try {
+    const objects = await barang.findAll();
+    if (objects.length > 0) {
+      res.status(200).json({
+        success: true,
+        message: "Semua object berhasil ditemukan",
+        data: objects,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "Data barang tidak ditemukan",
+        data: [],
       });
     }
   } catch (error) {
