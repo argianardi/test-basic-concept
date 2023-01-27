@@ -13,17 +13,20 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// Routes
+//----------------------------- No 1------------------------
 app.get("/fibonaci", (req, res) => {
-  const { jumlahAngka } = req.body;
+  const { input } = req.body;
 
-  if (jumlahAngka <= 1) {
-    return n;
+  if (input < 1) {
+    return res.status(400).json({
+      success: false,
+      message: "jumlah angka minimal 1 ",
+    });
   }
 
   const result = [0, 1];
 
-  for (let i = 2; i <= jumlahAngka + 2; i++) {
+  for (let i = 2; i <= input + 2; i++) {
     result[i] = result[i - 2] + result[i - 1];
   }
 
@@ -39,6 +42,38 @@ app.get("/fibonaci", (req, res) => {
     succes: "true",
     data: fibonaciGanjil,
   });
+});
+
+//----------------------------- No 3------------------------
+const barang = require("./configs/models/barang");
+
+// post request
+app.post("/create-object", (req, res) => {
+  const { nama_barang, harga, stock } = req.body;
+
+  if (!(nama_barang && harga && stock)) {
+    return res.status(400).json({
+      success: false,
+      message: "Data belum lengkap",
+    });
+  }
+
+  try {
+    const dataBarang = barang.create({
+      nama_barang,
+      harga,
+      stock,
+    });
+    res.status(201).json({
+      success: true,
+      message: "Barang berhasil ditambahkan",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
 });
 
 // server listening
