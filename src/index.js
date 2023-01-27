@@ -13,7 +13,7 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-//----------------------------- No 1------------------------
+//----------------------------- No.1 Bilangan fibonaci------------------------
 app.get("/fibonaci", (req, res) => {
   const { input } = req.body;
 
@@ -44,11 +44,11 @@ app.get("/fibonaci", (req, res) => {
   });
 });
 
-//----------------------------- No 3------------------------
+//----------------------------- No.3 Menampilkan object------------------------
 const barang = require("./configs/models/barang");
 
-// post request
-app.post("/create-object", (req, res) => {
+//API post request Untuk membuat object
+app.post("/create-object", async (req, res) => {
   const { nama_barang, harga, stock } = req.body;
 
   if (!(nama_barang && harga && stock)) {
@@ -59,7 +59,7 @@ app.post("/create-object", (req, res) => {
   }
 
   try {
-    const dataBarang = barang.create({
+    const dataBarang = await barang.create({
       nama_barang,
       harga,
       stock,
@@ -68,6 +68,31 @@ app.post("/create-object", (req, res) => {
       success: true,
       message: "Barang berhasil ditambahkan",
     });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+});
+
+// API get request untuk menampilkan object
+app.get("/show-object/:id", async (req, res) => {
+  try {
+    const object = await barang.findAll({ where: { id: req.params.id } });
+    if (object.length > 0) {
+      res.status(200).json({
+        success: true,
+        message: "barang berhasil ditemukan",
+        data: object,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "Object tidak ditemukan",
+        data: {},
+      });
+    }
   } catch (error) {
     res.status(500).json({
       success: false,
