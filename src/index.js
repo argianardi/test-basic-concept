@@ -44,6 +44,26 @@ app.get("/fibonaci", (req, res) => {
   });
 });
 
+//----------------------------- No.2 Irsan string------------------------
+app.get("/irisan-string", (req, res) => {
+  const { input } = req.body;
+
+  const findSameChar = (str) => {
+    const alfabet = "abcdefghijklmnopqrstuvwxyz";
+    if (alfabet.includes(str) === true) {
+      return str.length;
+    } else {
+      return 0;
+    }
+  };
+  const sameChar = findSameChar(input);
+
+  res.status(200).json({
+    succes: "true",
+    data: sameChar,
+  });
+});
+
 //----------------------------- No.3 Menampilkan object------------------------
 const barang = require("./configs/models/barang");
 
